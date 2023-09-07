@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = Unity.Mathematics.Random;
 
 public class WalkerGenerator : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class WalkerGenerator : MonoBehaviour
     public Tilemap tileMap;
     public Tile Floor;
     public Tile Wall;
+    public Tile Floor_Alt;
     public int MapWidth = 30;
     public int MapHeight = 30;
 
@@ -80,6 +82,7 @@ public class WalkerGenerator : MonoBehaviour
     {
         while ((float)TileCount / (float)gridHandler.Length < FillPercentage)
         {
+            Tile rdm_floor_tile = null;
             bool hasCreatedFloor = false;
             foreach (WalkerObject curWalker in Walkers)
             {
@@ -87,7 +90,16 @@ public class WalkerGenerator : MonoBehaviour
 
                 if (gridHandler[curPos.x, curPos.y] != Grid.FLOOR)
                 {
-                    tileMap.SetTile(curPos, Floor);
+                    int rdm = UnityEngine.Random.Range(0, 100);
+                    if (rdm % 9 == 0 && rdm > 80)
+                    {
+                        rdm_floor_tile = Floor_Alt;
+                    }
+                    else
+                    {
+                        rdm_floor_tile = Floor;
+                    }
+                    tileMap.SetTile(curPos, rdm_floor_tile);
                     TileCount++;
                     gridHandler[curPos.x, curPos.y] = Grid.FLOOR;
                     hasCreatedFloor = true;
